@@ -1,18 +1,25 @@
-SUBDIRS:= $(shell ls)
+# SPDX-License-Identifier: CC0-1.0
+#
+# SPDX-FileContributor: Antonio Niño Díaz, 2023
 
-#---------------------------------------------------------------------------------
-all: chapters
-#---------------------------------------------------------------------------------
-	@rm -fr bin
-	@mkdir -p bin
-	@find . -name "*.nds" -exec cp -fv {} bin \;
+.PHONY: all clean
 
-chapters:
-	@for i in $(SUBDIRS); do if test -e $$i/Makefile ; then $(MAKE) -C $$i || { exit 1;} fi; done;
+MAKE	:= make
 
-#---------------------------------------------------------------------------------
+all:
+	@for i in `ls`; do \
+		if test -e $$i/Makefile ; then \
+			$(MAKE) -C $$i --no-print-directory || { exit 1;} \
+		fi; \
+	done;
+	@rm -fr build-all
+	@mkdir -p build-all
+	@find . -name "*.nds" -not -path build-all -exec cp -fv {} build-all \;
+
 clean:
-#---------------------------------------------------------------------------------
-	@rm -fr bin
-	@rm -f *.bz2
-	@for i in $(SUBDIRS); do if test -e $$i/Makefile ; then $(MAKE)  -C $$i clean || { exit 1;} fi; done;
+	@for i in `ls`; do \
+		if test -e $$i/Makefile ; then \
+			$(MAKE) -C $$i clean --no-print-directory || { exit 1;} \
+		fi; \
+	done;
+	@rm -fr build-all
