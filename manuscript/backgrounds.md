@@ -96,7 +96,7 @@ recommend you look at Cearn's tutorial on affine transformations at
 Since this is the first time in this manual where we'll start to write code, we
 should be aware of the resources available to assist us in following along with
 this manual. If you haven't already done so, download the sources that
-accompany this manual from the manual homepage at <http://patater.com/manual>.
+accompany this manual from the manual repository at <https://github.com/blocksds/manual>.
 After extracting the sources, you'll find a folder called `code`. The manual
 provides a template for you to use with this manual and any other Nintendo DS
 programming projects you might wish to start developing. This template is
