@@ -18,13 +18,12 @@ SOURCEDIRS	:= source
 INCLUDEDIRS	:= include
 GFXDIRS		:= gfx
 BINDIRS		:=
-AUDIODIRS	:= audio
+AUDIODIRS	:=
 
 # Libraries
 # ---------
 
-LIBS		:= -lmm9 -lnds9
-LIBDIRS		:= $(BLOCKSDS)/libs/maxmod \
-			   $(BLOCKSDS)/libs/libnds
+LIBS		:= -lnds9
+LIBDIRS		:= $(BLOCKSDS)/libs/libnds
 
 include $(BLOCKSDS)/sys/default_makefiles/rom_arm9/Makefile

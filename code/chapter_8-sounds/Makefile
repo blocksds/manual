@@ -6,8 +6,8 @@ BLOCKSDS	?= /opt/blocksds/core
 
 # User config
 
-NAME		:= c9_sounds
-GAME_TITLE	:= Chapter 9
+NAME		:= c8_sounds
+GAME_TITLE	:= Chapter 8
 GAME_SUBTITLE	:= Sounds
 GAME_AUTHOR	:= www.patater.com
 

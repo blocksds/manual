@@ -6,8 +6,8 @@ BLOCKSDS	?= /opt/blocksds/core
 
 # User config
 
-NAME		:= c8_input
-GAME_TITLE	:= Chapter 8
+NAME		:= c7_input
+GAME_TITLE	:= Chapter 7
 GAME_SUBTITLE	:= Input
 GAME_AUTHOR	:= www.patater.com
 
@@ -18,13 +18,12 @@ SOURCEDIRS	:= source
 INCLUDEDIRS	:= include
 GFXDIRS		:= gfx
 BINDIRS		:=
-AUDIODIRS	:= audio
+AUDIODIRS	:=
 
 # Libraries
 # ---------
 
-LIBS		:= -lmm9 -lnds9
-LIBDIRS		:= $(BLOCKSDS)/libs/maxmod \
-			   $(BLOCKSDS)/libs/libnds
+LIBS		:= -lnds9
+LIBDIRS		:= $(BLOCKSDS)/libs/libnds
 
 include $(BLOCKSDS)/sys/default_makefiles/rom_arm9/Makefile

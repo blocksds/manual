@@ -6,8 +6,8 @@ BLOCKSDS	?= /opt/blocksds/core
 
 # User config
 
-NAME		:= c5_1_backgrounds
-GAME_TITLE	:= Chapter 5.1
+NAME		:= c4_1_backgrounds
+GAME_TITLE	:= Chapter 4.1
 GAME_SUBTITLE	:= Backgrounds
 GAME_AUTHOR	:= www.patater.com
 
@@ -23,8 +23,7 @@ AUDIODIRS	:=
 # Libraries
 # ---------
 
-LIBS		:= -lmm9 -lnds9
-LIBDIRS		:= $(BLOCKSDS)/libs/maxmod \
-			   $(BLOCKSDS)/libs/libnds
+LIBS		:= -lnds9
+LIBDIRS		:= $(BLOCKSDS)/libs/libnds
 
 include $(BLOCKSDS)/sys/default_makefiles/rom_arm9/Makefile
