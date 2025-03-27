@@ -171,18 +171,19 @@ with.
 
 #### Figure 5.2. libnds Affine Background API
 
-\begin{bmatrix}BG3{\text{\_}}XDX & BG3{\text{\_}}XDY\\\\BG3{\text{\_}}YDX & BG3{\text{\_}}YDY\end{bmatrix}
+\begin{bmatrix}BG3{\text{\_}}PA & BG3{\text{\_}}PB\\\\BG3{\text{\_}}PC & BG3{\text{\_}}PD\end{bmatrix}
 
 What we'll do now is add three backgrounds. We'll put a splash screen on the
 top physical screen, a starfield on the bottom physical screen, and a planet
-placed atop the starfield background. To do this, we'll use `SUB_BG3` (although
-we could use `SUB_BG2`) for the splash screen and both backgrounds 2 and 3 on
-the main screen for the planet and starfield respectively. In order to make
-sure the planet shows up above the starfield as opposed to below it, we give
-the planet a priority number less than that of the starfield's priority number.
-Relatively lower priority numbers place backgrounds relatively above other
-backgrounds. There are only four priority numbers per graphics engine that we
-can assign to backgrounds (priority numbers 0-3).
+placed atop the starfield background. To do this, we'll use `REG_BG3CNT_SUB`
+(although we could use `REG_BG2CNT_SUB`) for the splash screen and both
+backgrounds 2 and 3 on the main screen for the planet and starfield
+respectively. In order to make sure the planet shows up above the starfield as
+opposed to below it, we give the planet a priority number less than that of the
+starfield's priority number. Relatively lower priority numbers place
+backgrounds relatively above other backgrounds. There are only four priority
+numbers per graphics engine that we can assign to backgrounds (priority numbers
+0-3).
 
 We'll now use that nice API libnds provides us for both the background control
 registers and the affine transformation matrix. Let's proceed to make a
@@ -351,7 +352,7 @@ help you get the hang of using grit.
 For more information regarding grit, you can visit the project homepage and
 read the grit manual at <http://www.coranac.com/projects/grit/> and
 <http://www.coranac.com/man/grit/html/grit.htm> respectively. You can also
-download the latest version of grit from the grit project homepage.
+download the latest version of grit from the package manager of your toolchain.
 
 ### Putting in the Star Fields
 
@@ -386,6 +387,82 @@ you have chosen.
 
 ![Starfield and planet](images/starfield_and_planet.png)
 
+### High level background API of libnds
+
+Now that we have managed to display our backgrounds, you may ask yourself if
+there is an easier way to do all of this setup. The good news is that libnds
+comes with a high level background API that lets us do the same things we have
+just done, but with nicer functions that can even do some error checking for us.
+Note that this API isn't very high level, you still need to decide how to use
+your VRAM slots, but the API will help you in a few ways that we will see in a
+moment.
+
+The first change we're going to make is to remove the `DISPLAY_BG2_ACTIVE` and
+`DISPLAY_BG3_ACTIVE` flags from the calls to `videoSetMode()` and
+`videoSetModeSub()`. The new high level functions will do this for us. In
+general, it's cleaner to decouple your video initialization logic and the code
+that sets up and enables each specific background layer.
+
+```C++
+{{#include snippets/backgrounds/2/main.cpp:init_video}}
+```
+
+The biggest changes, however, are in the rest of the demo:
+
+```C++
+{{#include snippets/backgrounds/2/main.cpp:init_backgrounds}}
+```
+
+As you can see, we are no longer writing to any register (`REG_BG3CNT`,
+`REG_BG3PA`, etc) and we aren't using any magic definition (`BG_BMP_BASE()`,
+`BG_PRIORITY()`, etc). Instead, we are using `bgInit()` and `bgInitSub()`,
+`bgSetPriority()`, `bgSetScroll()`, `bgGetGfxPtr()` and `bgUpdate()`.
+
+We have also reordered the code so that the configuration of each layer and the
+copy of data to VRAM is done in the same function rather than setting up the
+backgrounds in one function and copying data in other functions. Now that we
+understand how everything works, we can start to organize the code for clarity.
+
+With the high level API you're supposed to call `bgInit()` (or `bgInitSub()`)
+with the layer number, the background type, size, map base and tile base. For
+now, we don't need to worry about the last one as it isn't used in 16-bit bitmap
+backgrounds.
+
+`bgInit()` and `bgInitSub()` return an ID that we can use in the other
+functions. Note that this ID is just the layer number in the case of the main
+screen (0 to 3), and the layer number plus 4 for the sub screen (4 to 7).
+
+Once you have initialized a background, you can use `bgSetPriority()` to set its
+priority. You can also `bgSetScroll()` to move the background around without
+having to worry about fixed point values (or `bgSetScrollf()` if you want to use
+fixed point values!).
+
+You can also use `bgGetGfxPtr()` to get a pointer to the location in VRAM where
+the background layer is fetching the data from. You can use this function to get
+the destination of your DMA copies into VRAM.
+
+Whenever you initialize a background or modify any of its settings, it is
+flagged as "dirty" internally, but no hardware registers are modified. You need
+to call `bgUpdate()` after you are done setting up your backgrounds. This
+function will actually write the right values to the registers.
+
+As you can see, using this high level API has several advantages.
+
+The most obvious one is that the names are clearer. You don't need to remember
+weird names such as `REG_BG3PA` and their meaning if all you want to do is to
+display a plain background without any scroll or rotation. libnds will handle
+all of that for you. Also, IDEs, code completion plugins and static code
+analyzers can help you a lot more when you use proper functions than with magic
+definitions.
+
+Another advantage of using the functions is that libnds does a lot of error
+checks for you. The background functions have a lot of assertions in the code
+that will display crash screens on the DS when the code detects an invalid
+setting. For example, if you try to use a layer number that is too big, you will
+get an error screen with a message such as "Only layers 0 - 3 are supported".
+
+You can check the documentation of libnds to get more information about all the
+available functions.
 
 [^affine]: Affine
 [^affine_transformation_matrix]: Affine transformation matrix

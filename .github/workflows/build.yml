@@ -26,6 +26,7 @@ jobs:
       - name: Build Chapter 5
         run: |
           make -C code/chapter_5-backgrounds_1
+          make -C code/chapter_5-backgrounds_2
 
       - name: Build Chapter 6
         run: |
