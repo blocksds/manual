@@ -15,10 +15,10 @@ GAME_AUTHOR	:= www.patater.com
 # -----------------
 
 SOURCEDIRS	:= source
-INCLUDEDIRS	:= include
+INCLUDEDIRS	:=
 GFXDIRS		:= gfx
 BINDIRS		:=
-AUDIODIRS	:= audio
+AUDIODIRS	:=
 
 # Libraries
 # ---------
