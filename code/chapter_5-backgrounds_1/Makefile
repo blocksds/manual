@@ -6,8 +6,8 @@ BLOCKSDS	?= /opt/blocksds/core
 
 # User config
 
-NAME		:= c5_backgrounds
-GAME_TITLE	:= Chapter 5
+NAME		:= c5_1_backgrounds
+GAME_TITLE	:= Chapter 5.1
 GAME_SUBTITLE	:= Backgrounds
 GAME_AUTHOR	:= www.patater.com
 
